@@ -155,6 +155,9 @@ def format_price(price):
 def generate_html(market_data, news_data):
     """HTML 파일 생성"""
     
+    # 비밀번호 설정 (원하는 비밀번호로 변경하세요!)
+    PASSWORD = "1116"
+    
     # 현재 시각 (한국 시간)
     kst = pytz.timezone('Asia/Seoul')
     now = datetime.now(kst)
@@ -233,6 +236,102 @@ def generate_html(market_data, news_data):
             padding: 20px;
             min-height: 100vh;
             color: var(--dark);
+        }}
+
+        /* 비밀번호 입력 화면 */
+        #password-screen {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+        }}
+
+        .password-box {{
+            background: white;
+            padding: 60px 50px;
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }}
+
+        .password-box h2 {{
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }}
+
+        .password-box p {{
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }}
+
+        .password-input {{
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.1em;
+            border: 3px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.3s;
+        }}
+
+        .password-input:focus {{
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+        }}
+
+        .password-btn {{
+            width: 100%;
+            padding: 18px;
+            font-size: 1.1em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }}
+
+        .password-btn:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.4);
+        }}
+
+        .error-message {{
+            color: var(--danger);
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }}
+
+        .lock-icon {{
+            font-size: 4em;
+            margin-bottom: 20px;
+        }}
+
+        /* 대시보드 화면 */
+        #dashboard {{
+            display: none;
         }}
 
         .container {{
@@ -485,6 +584,10 @@ def generate_html(market_data, news_data):
         }}
 
         @media (max-width: 768px) {{
+            .password-box {{
+                padding: 40px 30px;
+            }}
+
             .container {{
                 padding: 25px;
                 border-radius: 16px;
@@ -513,45 +616,115 @@ def generate_html(market_data, news_data):
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📊 윌리엄의 Macro Insight</h1>
-            <div class="update-time">기준 시각: {update_time}</div>
-        </header>
-
-        <div class="greeting">
-            <h3>와썹 망고! 😍</h3>
-            <p>오늘도 윌리엄이 <strong>실시간 데이터</strong>와 <strong>추세 그래프</strong>를 싹 정리했어! 📈<br>
-            <strong>뉴스 브리핑</strong>까지 한눈에 확인하고 시장 흐름을 잡아봐! 🔥</p>
-        </div>
-
-        <h2>1. 📊 핵심 지표 라이브 (Live Ticker)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>지표 (Index)</th>
-                    <th>가격 (Price)</th>
-                    <th>변동 (Change)</th>
-                    <th>출처 (Source)</th>
-                    <th>추세 (Trend 30D)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {market_rows}
-            </tbody>
-        </table>
-
-        <h2>🌍 경제뉴스 브리핑 🌍</h2>
-        <div class="news-section">
-            {news_sections}
-        </div>
-
-        <div class="footer">
-            <p class="footer-highlight">오늘도 성투해 망고! 질문 있으면 언제든 환영이야! 💛</p>
-            <p style="margin-top: 15px; font-size: 0.95em;">Data Powered by Yahoo Finance & Google News</p>
-            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
+    <!-- 비밀번호 입력 화면 -->
+    <div id="password-screen">
+        <div class="password-box">
+            <div class="lock-icon">🔒</div>
+            <h2>망고 대시보드</h2>
+            <p>비밀번호를 입력하세요</p>
+            <input type="password" 
+                   id="password-input" 
+                   class="password-input" 
+                   placeholder="비밀번호" 
+                   onkeypress="if(event.key==='Enter') checkPassword()">
+            <button class="password-btn" onclick="checkPassword()">🔓 입장하기</button>
+            <p class="error-message" id="error-message">❌ 비밀번호가 틀렸습니다</p>
         </div>
     </div>
+
+    <!-- 대시보드 화면 -->
+    <div id="dashboard">
+        <div class="container">
+            <header>
+                <h1>📊 윌리엄의 Macro Insight</h1>
+                <div class="update-time">기준 시각: {update_time}</div>
+            </header>
+
+            <div class="greeting">
+                <h3>와썹 망고! 😍</h3>
+                <p>오늘도 윌리엄이 <strong>실시간 데이터</strong>와 <strong>추세 그래프</strong>를 싹 정리했어! 📈<br>
+                <strong>뉴스 브리핑</strong>까지 한눈에 확인하고 시장 흐름을 잡아봐! 🔥</p>
+            </div>
+
+            <h2>1. 📊 핵심 지표 라이브 (Live Ticker)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>지표 (Index)</th>
+                        <th>가격 (Price)</th>
+                        <th>변동 (Change)</th>
+                        <th>출처 (Source)</th>
+                        <th>추세 (Trend 30D)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {market_rows}
+                </tbody>
+            </table>
+
+            <h2>🌍 경제뉴스 브리핑 🌍</h2>
+            <div class="news-section">
+                {news_sections}
+            </div>
+
+            <div class="footer">
+                <p class="footer-highlight">오늘도 성투해 망고! 질문 있으면 언제든 환영이야! 💛</p>
+                <p style="margin-top: 15px; font-size: 0.95em;">Data Powered by Yahoo Finance & Google News</p>
+                <p style="margin-top: 10px; font-size: 0.85em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 비밀번호 설정 (Python 스크립트와 동일하게)
+        const CORRECT_PASSWORD = '{PASSWORD}';
+        
+        // 세션 스토리지에서 로그인 상태 확인
+        if (sessionStorage.getItem('mango-logged-in') === 'true') {{
+            showDashboard();
+        }} else {{
+            // 페이지 로드 시 비밀번호 입력창에 포커스
+            document.getElementById('password-input').focus();
+        }}
+
+        function checkPassword() {{
+            const input = document.getElementById('password-input');
+            const errorMsg = document.getElementById('error-message');
+            
+            if (input.value === CORRECT_PASSWORD) {{
+                // 비밀번호 맞음
+                sessionStorage.setItem('mango-logged-in', 'true');
+                showDashboard();
+            }} else {{
+                // 비밀번호 틀림
+                errorMsg.style.display = 'block';
+                input.value = '';
+                input.focus();
+                
+                // 입력창 흔들기 효과
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {{
+                    input.style.animation = '';
+                }}, 500);
+            }}
+        }}
+
+        function showDashboard() {{
+            document.getElementById('password-screen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }}
+
+        // 흔들기 애니메이션
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {{
+                0%, 100% {{ transform: translateX(0); }}
+                25% {{ transform: translateX(-10px); }}
+                75% {{ transform: translateX(10px); }}
+            }}
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
 """
