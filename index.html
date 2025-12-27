@@ -4,48 +4,562 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📊 윌리엄의 Macro Insight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #F7931E;
+            --accent: #FFC93C;
+            --dark: #2D3142;
+            --light: #EFF1F3;
+            --success: #00D9A3;
+            --danger: #FF5252;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 20px;
+            min-height: 100vh;
+            color: var(--dark);
         }
+
         .container {
-            text-align: center;
+            max-width: 1400px;
+            margin: 0 auto;
             background: white;
-            padding: 60px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 30px;
+        }
+
         h1 {
-            color: #764ba2;
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
         }
-        p {
+
+        .update-time {
             color: #666;
-            font-size: 1.2em;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .greeting {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .greeting::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .greeting h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .greeting p {
+            font-size: 1.15em;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark);
+            font-size: 2em;
+            margin: 50px 0 25px 0;
+            padding-left: 20px;
+            border-left: 6px solid var(--primary);
+            font-weight: 900;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--dark) 0%, #4a5568 100%);
+        }
+
+        th {
+            color: white;
+            padding: 20px 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(90deg, #fff5f0 0%, white 100%);
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.1);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 18px;
+            font-size: 1em;
+        }
+
+        .index-name {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .price {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .change-positive {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .change-negative {
+            color: #2196F3;
+            font-weight: 700;
+        }
+
+        .change-neutral {
+            color: #9E9E9E;
+            font-weight: 700;
+        }
+
+        .news-section {
+            margin: 30px 0;
+        }
+
+        .news-category {
+            margin: 35px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
+            border-radius: 16px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .news-category h3 {
+            color: var(--dark);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .news-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-item:hover {
+            padding-left: 15px;
+        }
+
+        .news-item a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.05em;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.6;
+            transition: color 0.3s;
+        }
+
+        .news-item a:hover {
+            color: var(--primary);
+        }
+
+        .news-item a::before {
+            content: "▪";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px 0;
+            border-top: 3px solid #eee;
+        }
+
+        .footer p {
+            color: #666;
+            font-size: 1.1em;
             line-height: 1.8;
         }
-        .emoji {
-            font-size: 4em;
-            margin-bottom: 20px;
+
+        .footer-highlight {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-radius: 16px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+
+            .greeting h3 {
+                font-size: 1.6em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="emoji">⚙️</div>
-        <h1>대시보드 설정 중...</h1>
-        <p>
-            GitHub Actions를 통해 첫 번째 업데이트가 실행되면<br>
-            이 페이지가 자동으로 대시보드로 변경됩니다.<br><br>
-            <strong>Actions 탭에서 워크플로우를 수동으로 실행해보세요!</strong>
-        </p>
+        <header>
+            <h1>📊 윌리엄의 Macro Insight</h1>
+            <div class="update-time">기준 시각: 2025-12-27 19:34</div>
+        </header>
+
+        <div class="greeting">
+            <h3>와썹 망고! 😍</h3>
+            <p>오늘도 윌리엄이 <strong>실시간 데이터</strong>와 <strong>추세 그래프</strong>를 싹 정리했어! 📈<br>
+            <strong>뉴스 브리핑</strong>까지 한눈에 확인하고 시장 흐름을 잡아봐! 🔥</p>
+        </div>
+
+        <h2>1. 📊 핵심 지표 라이브 (Live Ticker)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>지표 (Index)</th>
+                    <th>가격 (Price)</th>
+                    <th>변동 (Change)</th>
+                    <th>출처 (Source)</th>
+                    <th>추세 (Trend 30D)</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td class="index-name">비트코인 (BTC/KRW)</td>
+            <td class="price"><strong>126,193,488</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">이더리움 (ETH/KRW)</td>
+            <td class="price"><strong>4,225,168</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">달러 지수 (DXY)</td>
+            <td class="price"><strong>98.05</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">달러/원 (USD/KRW)</td>
+            <td class="price"><strong>1,442</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">엔/원 (JPY/KRW)</td>
+            <td class="price"><strong>9.19</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">위안/원 (CNY/KRW)</td>
+            <td class="price"><strong>205.88</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">유로/원 (EUR/KRW)</td>
+            <td class="price"><strong>1,697</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">나스닥 종합</td>
+            <td class="price"><strong>23,593</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">S&P 500</td>
+            <td class="price"><strong>6,930</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">다우존스</td>
+            <td class="price"><strong>48,711</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">니케이 225</td>
+            <td class="price"><strong>50,750</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">상해종합</td>
+            <td class="price"><strong>3,964</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">코스피</td>
+            <td class="price"><strong>4,130</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">WTI 원유</td>
+            <td class="price"><strong>56.74</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">국제 금</td>
+            <td class="price"><strong>4,553</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">미국 국채 10년</td>
+            <td class="price"><strong>4.14</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+        <tr>
+            <td class="index-name">미국 국채 2년</td>
+            <td class="price"><strong>3.54</strong></td>
+            <td><span class="change-neutral">⚪️ 0.00%</span></td>
+            <td>Yahoo Finance</td>
+            <td></td>
+        </tr>
+        
+            </tbody>
+        </table>
+
+        <h2>🌍 경제뉴스 브리핑 🌍</h2>
+        <div class="news-section">
+            
+            <div class="news-category">
+                <h3>🥔 핫이슈</h3>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE5BclZnSFpPSjJwMjg2VXRIeVpwNDNibUVXZ0kydzhISEZWZVY0cU1nSnZkUkpyV2FteXVzWTlINDBYNEhGRWpaSFhod1ktN3FkZnV2bk5lNmRkeE5TVnp3cFJJNkRhX2locV9R?oc=5" target="_blank">도시 농축협, 도농 상생을 위한 무이자자금 4,717억원 지원 - BBS불교방송</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBKUXdoMjNkb1ZRZWxWMkJvQVhJZFZoVFNwRTRodXJiaW02a3ByMTd6WUl3c2xUanEtU0FIX0pyaG9hWl9XbUhac2dGd1hHTHp0SUFqU2I1OV8ybHN2RkE?oc=5" target="_blank">전체 - 시사저널</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5UZWVyRk5mTU82S09uQVJpYmlzZFBfbFhFbGwtOWJWT1lWcV9KbjNXa3pBaXJBa1BsWk5ramVTeE9ZLS1xbmEwVnM1a0VVMmsxZTlVN2d2WEo3WGVSdEtDbnZYeDBuUllwWnY3QUtNOA?oc=5" target="_blank">[12월 넷째 주 세계경제동향 브리핑] 달러 내리고 금 치솟았다…연말 앞둔 글로벌 자산시장 변화 - 기호일보</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE4wWFhLbzhiYTgzbDNYZmlPWHFwSzkwT0dzTm1oTV81anFvai1mRmxtVTlLcnZZLTg5S2xNOXUwOU8zWXVsR2RIWkNwaU5pbmdWcm9WUmJxSll0ejBzVDlaNm5QdlBzaUlubjFGaw?oc=5" target="_blank">신성영 인천시의원, 페이스북 통해 제9대 인천경제자유구역청장 도전 밝혀 - 영종뉴스</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE55SENXYlFLeWJMUU1FSVRJdFZfdlQ2QUw3dzBrZUNaSDRQUWRlbTZscmZpbllOSFNNVlVyLS1YMklMX29hdmctYS1pRW9JUjNUR0lQZnFtcHNoVzDSAWBBVV95cUxNQzNGYkhkYjdKRG8xSjhMRDhpVFJXWW13bXE3NGJTczd3TlJiRy1YUHlOUms3R2hISXdjemI3UzRRa2R3NERiOUJIOWRpX2JSQ19OeExMWEZFb1lwajNTZHk?oc=5" target="_blank">[다음주 경제] 높은 환율에 12월 물가 얼마나 올랐나 - 연합뉴스</a>
+                </div>
+                
+            </div>
+            
+            <div class="news-category">
+                <h3>📊 증시 UP&DOWN</h3>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1EX3h3YXFpUkdqaGNXNnFOZmRvR29uVzNsYnJHUU1PQzhIUWc4ZWFaQU1sakJlQVY0empSX3VsMFd5Z0dLZUo2TnZGanVXVVNfNS1nMkM1OWVXeDJnRHlLcGpjSV9uS1V2TGNNOA?oc=5" target="_blank">쿠팡, 미국 주식 반등과 주주 집단소송 막기위해 한국 침해사고 절차 무시했나 - 데일리시큐</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxQTGVqbVJ5dE1qVEpCc3MtOFRrOEllMWdxTFJ1WEtOcFlOUFZHQzgwZXhLYlpJNk9rNjVfQS04bmRUSHlWVF9ZaEZMYzVIM3hPY0lDMnRiN2JUcHVvV0NBclZZdE1xVGRRS2FENHE0WFVZNDU2REVPVUtiekxRdjVudVRQM25yQUdDRGFxcFdLREXSAZABQVVfeXFMUExlam1SeXRNalRKQnNzLThUazhJZTFncUxSdVhLTnBZTlBWR0M4MGV4S2JaSTZPazY1X0EtOG5kVEh5VlRfWWhGTGM1SDN4T2NJQzJ0YjdiVHB1b1dDQXJWWXRNcVRkUUthRDRxNFhVWTQ1NkRFT1VLYnpMUXY1bnVUUDNuckFHQ0RhcXBXS0RF?oc=5" target="_blank">상장 기업은 Toho Co. (TSE:9602) 주식의 33%를 소유하고 있지만 개인 투자자가 회사의 46%를 지배하고 있습니다. - simplywall.st</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9pWDUyaWhnU2hSX1k5cXNOUTQzXzVYSElhVmJvT1FLUVlyYzQyajJzVGJzSnZyd1JYby1xTDFEeDdwcmsxcnlfdkxtQlY3bUlFbnRBY05Walh5NHlBVmNGTlRzbGlsYUFyTmc?oc=5" target="_blank">세제혜택만 받고 해외주식 복귀하면? RIA 실효성 논란 - 한국일보</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBjMEgwREdhTWhVZG96SlU1T3pVbmdTTHQwTVJIOV9wdWFmcXJKV215eWhKaHY1eGhQNUVMbHM3aFVnbmpJQ1FiY1VrR2RHNUVkVlk0akxFbVBRVS04X2c?oc=5" target="_blank">비상장 주식의 NYSE ‘포지 글로벌’…스페이스X도 살 수 있어요 [마켓 디코드] - smarttoday.co.kr</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBlSmpTbnRyRk92ZVZLQkF0NkJyUG1jOC11SUlIZ2o0N3dMd1JVQzRyZTRQOE1rbFJ5WVM0T08xSFU5cFhMVnM4dzROaElBbWVvSE1wSWhB?oc=5" target="_blank">“4일간 美주식 4000억 팔았다” 서학개미 ‘양도세 당근책’에 국장 돌아오나 [머니뭐니] - 헤럴드경제</a>
+                </div>
+                
+            </div>
+            
+            <div class="news-category">
+                <h3>🏘️ 부동산</h3>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiR0FVX3lxTE9tOFZEenl2VjZsSTVjSk1qREJDbXNOaUtfOFJVVTBsY2tkOWxQQ2YwWkNpRXp6eThHVHcyVldzNjZKWDNjWXdJ?oc=5" target="_blank">부동산 뉴스 - 다방</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE54SWJkNzZrZk1xUmhvOF9SemJYUzJRNVlEN01oUzhzb2dVeDk4NE5YelNCRWNudTBmcVpENUtSbUh4RHdKR282UVA2bjBkZnpRR3ZmSDY3T1hKXzJza3FMc2xBbm9UX1dMRXc?oc=5" target="_blank">올해 마지막 주 전국 10곳서 6692가구 분양 돌입[부동산AtoZ] - 아시아경제</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBvSXhCTXBoeDl3WE9PUHNhYU5qWnJ2ZFZuXzNUVmw5N1p5dXUzbFdTazEzWkJ1bExQVVVnQW9TamJrcDRwV29CN3FtQXZuc0VLaXhaMDVR?oc=5" target="_blank">1년만에 10억 오른 송파, 6·27 후 대출만 8200억 몰렸다 [부동산360] - 헤럴드경제</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xMVNsejlyUnJGd3dGUUxTckc4MFhDS0tQb3JoMDFreGlNUnNaZEFXUHY2MkIxUkhHR1pxbzJzYnZWY1RxdEY4aFhZSmpXdlM3TEtwdnhhYzM0Z9IBXkFVX3lxTE0wRHNCUXZGeVl4bXQxWWZlN0NEcHJfMG9UN1RfdmJQazBDYmRVY0hrQkNqUXJSamc4LVMzYXBYMEs0Rzhody1wNkpLUzdiekNsRVpnSENzc1BFcUoyWlE?oc=5" target="_blank">"7억 더 내라” 강남 집주인도 날벼락..."끝이 아니다" [부동산 산책] - fnnews.com</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE1RdDBEWWs4NElFb1k4b3ZObVlxbHhyMUJyNEM4SWRiY2V5akRNZG9wdGc1NTJ3X2hXeVdENVFhNllrc09pVkJSOURFRVRiUW9RTWJDb3dRM2s2WEU?oc=5" target="_blank">[부동산캘린더] 올해 마지막 분양…내주 전국 5천576가구 청약 - 연합뉴스</a>
+                </div>
+                
+            </div>
+            
+        </div>
+
+        <div class="footer">
+            <p class="footer-highlight">오늘도 성투해 망고! 질문 있으면 언제든 환영이야! 💛</p>
+            <p style="margin-top: 15px; font-size: 0.95em;">Data Powered by Yahoo Finance & Google News</p>
+            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
+        </div>
     </div>
 </body>
 </html>
