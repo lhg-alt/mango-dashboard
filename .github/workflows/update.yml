@@ -15,8 +15,13 @@ jobs:
     - name: 체크아웃
       uses: actions/checkout@v4
       with:
+        ref: main
         fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Git 설정
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
     
     - name: Python 설정
       uses: actions/setup-python@v4
@@ -31,10 +36,13 @@ jobs:
       run: |
         python update_dashboard.py
     
-    - name: 변경사항 커밋 및 푸시
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: "🔄 자동 업데이트"
-        file_pattern: "index.html"
-        commit_user_name: "GitHub Actions Bot"
-        commit_user_email: "actions@github.com"
+    - name: 변경사항 확인 및 푸시
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          git add index.html
+          git commit -m "🔄 자동 업데이트: $(date +'%Y-%m-%d %H:%M')"
+          git pull --rebase origin main
+          git push origin main
+        else
+          echo "변경사항 없음"
+        fi
