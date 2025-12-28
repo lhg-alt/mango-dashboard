@@ -7,93 +7,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #FF6B35; --secondary: #F7931E; --dark: #2D3142;
-            --success: #00D9A3; --danger: #FF5252;
-        }
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px; min-height: 100vh; color: var(--dark);
-        }
-        #password-screen {
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999;
-        }
-        .password-box {
-            background: white; padding: 50px; border-radius: 24px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.3); text-align: center; max-width: 450px;
-        }
-        .password-box h2 {
-            font-size: 2em; margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .password-input {
-            width: 100%; padding: 15px; font-size: 1.1em; border: 3px solid #eee;
-            border-radius: 12px; margin: 20px 0;
-        }
-        .password-btn {
-            width: 100%; padding: 15px; font-size: 1.1em; font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; border: none; border-radius: 12px; cursor: pointer;
-        }
-        .error-message { color: var(--danger); margin-top: 15px; display: none; }
+        body { font-family: 'Noto Sans KR', sans-serif; background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; min-height: 100vh; }
+        #password-screen { display: flex; justify-content: center; align-items: center; min-height: 100vh; position: fixed; inset: 0; background: linear-gradient(135deg, #667eea, #764ba2); z-index: 9999; }
+        .password-box { background: white; padding: 50px; border-radius: 24px; box-shadow: 0 25px 80px rgba(0,0,0,0.3); text-align: center; max-width: 450px; }
+        .password-box h2 { font-size: 2em; margin-bottom: 20px; background: linear-gradient(135deg, #FF6B35, #F7931E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .password-input { width: 100%; padding: 15px; font-size: 1.1em; border: 3px solid #eee; border-radius: 12px; margin: 20px 0; }
+        .password-btn { width: 100%; padding: 15px; font-size: 1.1em; font-weight: 700; background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; border: none; border-radius: 12px; cursor: pointer; }
+        .error-message { color: #FF5252; margin-top: 15px; display: none; }
         #dashboard { display: none; }
-        .container {
-            max-width: 1400px; margin: 0 auto; background: white;
-            border-radius: 24px; padding: 50px; box-shadow: 0 25px 80px rgba(0,0,0,0.25);
-        }
-        h1 {
-            font-family: 'Montserrat', sans-serif; font-size: 3em; font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-align: center; margin-bottom: 15px;
-        }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 24px; padding: 50px; box-shadow: 0 25px 80px rgba(0,0,0,0.25); }
+        h1 { font-family: 'Montserrat', sans-serif; font-size: 3em; font-weight: 900; background: linear-gradient(135deg, #FF6B35, #F7931E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 15px; }
         .update-time { text-align: center; color: #666; margin-bottom: 30px; }
-        .greeting {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white; padding: 30px; border-radius: 20px; margin-bottom: 40px; text-align: center;
-        }
+        .greeting { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 30px; border-radius: 20px; margin-bottom: 40px; text-align: center; }
         .greeting h3 { font-size: 2em; margin-bottom: 15px; }
-        h2 {
-            font-size: 2em; margin: 40px 0 20px; padding-left: 20px;
-            border-left: 6px solid var(--primary);
-        }
-        table {
-            width: 100%; border-collapse: separate; border-spacing: 0;
-            margin: 20px 0; border-radius: 16px; overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        }
-        thead { background: linear-gradient(135deg, var(--dark), #4a5568); }
-        th {
-            color: white; padding: 18px; text-align: left; font-weight: 700;
-            font-size: 0.95em; text-transform: uppercase;
-        }
+        h2 { font-size: 2em; margin: 40px 0 20px; padding-left: 20px; border-left: 6px solid #FF6B35; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        thead { background: linear-gradient(135deg, #2D3142, #4a5568); }
+        th { color: white; padding: 18px; text-align: left; font-weight: 700; font-size: 0.95em; text-transform: uppercase; }
         tbody tr { transition: all 0.3s; border-bottom: 1px solid #eee; }
         tbody tr:hover { background: #fff5f0; transform: scale(1.01); }
         td { padding: 15px; }
         .index-name { font-weight: 700; }
         .price { font-family: 'Montserrat', sans-serif; font-size: 1.15em; font-weight: 700; }
-        .change-positive { color: var(--danger); font-weight: 700; }
+        .change-positive { color: #FF5252; font-weight: 700; }
         .change-negative { color: #2196F3; font-weight: 700; }
         .change-neutral { color: #9E9E9E; font-weight: 700; }
-        .news-category {
-            margin: 30px 0; padding: 25px; background: #f8f9fa;
-            border-radius: 16px; border-left: 5px solid var(--primary);
-        }
+        .news-category { margin: 30px 0; padding: 25px; background: #f8f9fa; border-radius: 16px; border-left: 5px solid #FF6B35; }
         .news-category h3 { font-size: 1.5em; margin-bottom: 15px; }
         .news-item { padding: 12px 0; border-bottom: 1px solid #e0e0e0; }
-        .news-item a {
-            color: #333; text-decoration: none; display: block;
-            transition: color 0.3s;
-        }
-        .news-item a:hover { color: var(--primary); padding-left: 10px; }
-        .footer {
-            text-align: center; margin-top: 50px; padding-top: 20px;
-            border-top: 3px solid #eee;
-        }
+        .news-item a { color: #333; text-decoration: none; display: block; transition: color 0.3s; }
+        .news-item a:hover { color: #FF6B35; padding-left: 10px; }
+        .footer { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 3px solid #eee; }
     </style>
 </head>
 <body>
@@ -102,142 +46,38 @@
             <div style="font-size: 4em; margin-bottom: 20px;">🔒</div>
             <h2>세계 흐름 대시보드</h2>
             <p>비밀번호를 입력하세요</p>
-            <input type="password" id="password-input" class="password-input" 
-                   placeholder="비밀번호" onkeypress="if(event.key==='Enter') checkPassword()">
+            <input type="password" id="password-input" class="password-input" placeholder="비밀번호" onkeypress="if(event.key==='Enter') checkPassword()">
             <button class="password-btn" onclick="checkPassword()">🔓 입장하기</button>
             <p class="error-message" id="error-message">❌ 비밀번호가 틀렸습니다</p>
         </div>
     </div>
-
     <div id="dashboard">
         <div class="container">
             <h1>🌍 세계 흐름 대시보드</h1>
-            <div class="update-time">기준 시각: 2025-12-28 11:18</div>
-
+            <div class="update-time">기준 시각: 2025-12-28 11:29</div>
             <div class="greeting">
                 <h3>세계 경제, 한눈에! 🌏</h3>
                 <p>최신 <strong>글로벌 금융 데이터</strong>를 실시간으로 제공합니다!</p>
             </div>
-
             <h2>📊 핵심 지표 라이브</h2>
             <table>
                 <thead>
-                    <tr>
-                        <th>지표</th>
-                        <th>가격</th>
-                        <th>변동 (전일대비)</th>
-                        <th>추세 (30일)</th>
-                        <th>출처</th>
-                    </tr>
+                    <tr><th>지표</th><th>가격</th><th>변동 (전일대비)</th><th>추세 (30일)</th><th>출처</th></tr>
                 </thead>
-                <tbody>
-        <tr>
-            <td class="index-name">비트코인 (BTC/KRW)</td>
-            <td class="price"><strong>126,529,976</strong></td>
-            <td><span class="change-negative">🔵 -5.18%</span></td>
-            <td>⬇️ 강한 하락</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">이더리움 (ETH/KRW)</td>
-            <td class="price"><strong>4,243,400</strong></td>
-            <td><span class="change-negative">🔵 -4.65%</span></td>
-            <td>📉 하락</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">달러/원 (USD/KRW)</td>
-            <td class="price"><strong>1,442</strong></td>
-            <td><span class="change-negative">🔵 -1.57%</span></td>
-            <td>📉 하락</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">나스닥 종합</td>
-            <td class="price"><strong>23,593</strong></td>
-            <td><span class="change-positive">🔴 +1.63%</span></td>
-            <td>📈 상승</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">S&P 500</td>
-            <td class="price"><strong>6,930</strong></td>
-            <td><span class="change-positive">🔴 +1.72%</span></td>
-            <td>📈 상승</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">다우존스</td>
-            <td class="price"><strong>48,711</strong></td>
-            <td><span class="change-positive">🔴 +2.71%</span></td>
-            <td>📈 상승</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">코스피</td>
-            <td class="price"><strong>4,130</strong></td>
-            <td><span class="change-positive">🔴 +4.26%</span></td>
-            <td>📈 상승</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">WTI 원유</td>
-            <td class="price"><strong>56.74</strong></td>
-            <td><span class="change-negative">🔵 -3.26%</span></td>
-            <td>📉 하락</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">국제 금</td>
-            <td class="price"><strong>4,553</strong></td>
-            <td><span class="change-positive">🔴 +9.30%</span></td>
-            <td>⬆️ 강한 상승</td>
-            <td>Yahoo Finance</td>
-        </tr>
-        </tbody>
+                <tbody></tbody>
             </table>
-
             <h2>🌍 경제 뉴스</h2>
-            <div class="news-section">
-            <div class="news-category">
-                <h3>📰 경제 뉴스</h3>
-                
-                <div class="news-item">
-                    <a href="#" target="_blank">뉴스 데이터 수집 중...</a>
-                </div>
-                
-                <p style="margin-top: 15px; color: #999; font-size: 0.9em;">
-                    💡 뉴스 기능은 Google News API 제한으로 인해 임시 중단되었습니다.
-                </p>
-            </div>
-            </div>
-
+            <div class="news-section"><div class="news-category"><h3>📰 경제 뉴스</h3><div class="news-item"><a href="#">실시간 뉴스는 추후 업데이트 예정입니다.</a></div></div></div>
             <div class="footer">
-                <p style="font-size: 1.2em; font-weight: 700; color: var(--primary);">
-                    현명한 투자, 정확한 정보에서 시작됩니다! 📊
-                </p>
-                <p style="margin-top: 10px; font-size: 0.9em; color: #999;">
-                    자동 업데이트: 매일 오전 9시 (KST)
-                </p>
+                <p style="font-size: 1.2em; font-weight: 700; color: #FF6B35;">현명한 투자, 정확한 정보에서 시작됩니다! 📊</p>
+                <p style="margin-top: 10px; font-size: 0.9em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
             </div>
         </div>
     </div>
-
     <script>
         const CORRECT_PASSWORD = 'mango2025';
-        if (sessionStorage.getItem('dashboard-logged-in') === 'true') {
-            showDashboard();
-        } else {
-            document.getElementById('password-input').focus();
-        }
+        if (sessionStorage.getItem('dashboard-logged-in') === 'true') showDashboard();
+        else document.getElementById('password-input').focus();
         function checkPassword() {
             const input = document.getElementById('password-input');
             if (input.value === CORRECT_PASSWORD) {
