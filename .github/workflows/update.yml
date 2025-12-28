@@ -13,7 +13,10 @@ jobs:
     
     steps:
     - name: 체크아웃
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Python 설정
       uses: actions/setup-python@v4
@@ -29,7 +32,9 @@ jobs:
         python update_dashboard.py
     
     - name: 변경사항 커밋 및 푸시
-      uses: stefanzweifel/git-auto-commit-action@v4
+      uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: "🔄 자동 업데이트: ${{ github.run_number }}"
-        file_pattern: index.html
+        commit_message: "🔄 자동 업데이트"
+        file_pattern: "index.html"
+        commit_user_name: "GitHub Actions Bot"
+        commit_user_email: "actions@github.com"
