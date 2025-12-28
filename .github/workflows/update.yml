@@ -14,14 +14,6 @@ jobs:
     steps:
     - name: 체크아웃
       uses: actions/checkout@v4
-      with:
-        ref: main
-        fetch-depth: 0
-    
-    - name: Git 설정
-      run: |
-        git config --global user.name "GitHub Actions Bot"
-        git config --global user.email "actions@github.com"
     
     - name: Python 설정
       uses: actions/setup-python@v4
@@ -30,19 +22,16 @@ jobs:
     
     - name: 패키지 설치
       run: |
-        pip install requests pytz
+        pip install pytz
     
     - name: 대시보드 업데이트
       run: |
         python update_dashboard.py
     
-    - name: 변경사항 확인 및 푸시
+    - name: 변경사항 커밋 및 푸시
       run: |
-        if [ -n "$(git status --porcelain)" ]; then
-          git add index.html
-          git commit -m "🔄 자동 업데이트: $(date +'%Y-%m-%d %H:%M')"
-          git pull --rebase origin main
-          git push origin main
-        else
-          echo "변경사항 없음"
-        fi
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add -A
+        git diff --staged --quiet || git commit -m "🔄 자동 업데이트"
+        git push --force origin main
