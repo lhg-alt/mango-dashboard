@@ -22,15 +22,14 @@ jobs:
     
     - name: 패키지 설치
       run: |
-        pip install requests pytz feedparser
+        pip install requests pytz
     
     - name: 대시보드 업데이트
       run: |
         python update_dashboard.py
     
     - name: 변경사항 커밋 및 푸시
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add index.html
-        git diff --quiet && git diff --staged --quiet || (git commit -m "🔄 자동 업데이트: $(date +'%Y-%m-%d %H:%M KST')" && git push)
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "🔄 자동 업데이트: ${{ github.run_number }}"
+        file_pattern: index.html
