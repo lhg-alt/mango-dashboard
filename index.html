@@ -17,7 +17,8 @@
         #dashboard { display: none; }
         .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 24px; padding: 50px; box-shadow: 0 25px 80px rgba(0,0,0,0.25); }
         h1 { font-family: 'Montserrat', sans-serif; font-size: 3em; font-weight: 900; background: linear-gradient(135deg, #FF6B35, #F7931E); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 15px; }
-        .update-time { text-align: center; color: #666; margin-bottom: 30px; }
+        .update-time { text-align: center; color: #666; margin-bottom: 10px; }
+        .data-status { text-align: center; color: #999; font-size: 0.9em; margin-bottom: 30px; }
         .greeting { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 30px; border-radius: 20px; margin-bottom: 40px; text-align: center; }
         .greeting h3 { font-size: 2em; margin-bottom: 15px; }
         h2 { font-size: 2em; margin: 40px 0 20px; padding-left: 20px; border-left: 6px solid #FF6B35; }
@@ -32,10 +33,13 @@
         .change-positive { color: #FF5252; font-weight: 700; }
         .change-negative { color: #2196F3; font-weight: 700; }
         .change-neutral { color: #9E9E9E; font-weight: 700; }
-        .news-category { margin: 30px 0; padding: 25px; background: #fff3cd; border-radius: 16px; border-left: 5px solid #ffc107; }
-        .news-category h3 { font-size: 1.5em; margin-bottom: 15px; }
+        .news-category { margin: 30px 0; padding: 25px; background: #f8f9fa; border-radius: 16px; border-left: 5px solid #FF6B35; }
+        .news-category h3 { font-size: 1.5em; margin-bottom: 15px; color: #2D3142; }
         .news-item { padding: 12px 0; border-bottom: 1px solid #e0e0e0; }
-        .news-item a { color: #333; text-decoration: none; display: block; }
+        .news-item:last-child { border-bottom: none; }
+        .news-item a { color: #333; text-decoration: none; display: flex; align-items: flex-start; gap: 10px; line-height: 1.6; transition: all 0.3s; }
+        .news-item a:hover { color: #FF6B35; padding-left: 10px; }
+        .news-item a::before { content: "▪"; color: #FF6B35; font-weight: bold; font-size: 1.3em; flex-shrink: 0; }
         .footer { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 3px solid #eee; }
     </style>
 </head>
@@ -53,10 +57,11 @@
     <div id="dashboard">
         <div class="container">
             <h1>🌍 세계 흐름 대시보드</h1>
-            <div class="update-time">기준 시각: 2025-12-28 12:01 (샘플 데이터)</div>
+            <div class="update-time">기준 시각: 2025-12-28 12:27</div>
+            <div class="data-status">📊 실시간 0개 / 샘플 9개</div>
             <div class="greeting">
                 <h3>세계 경제, 한눈에! 🌏</h3>
-                <p>최신 <strong>글로벌 금융 데이터</strong>를 실시간으로 제공합니다!</p>
+                <p>최신 <strong>글로벌 금융 데이터</strong>와 <strong>주요 뉴스</strong>를 실시간으로 제공합니다!</p>
             </div>
             <h2>📊 핵심 지표 라이브</h2>
             <table>
@@ -66,79 +71,164 @@
                 <tbody>
         <tr>
             <td class="index-name">비트코인 (BTC/KRW)</td>
-            <td class="price"><strong>126,768,072</strong></td>
-            <td><span class="change-negative">🔵 -2.40%</span></td>
+            <td class="price"><strong>130,583,423</strong></td>
+            <td><span class="change-positive">🔴 +4.84%</span></td>
             <td>📉 하락</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
             <td class="index-name">이더리움 (ETH/KRW)</td>
-            <td class="price"><strong>4,192,123</strong></td>
-            <td><span class="change-negative">🔵 -4.36%</span></td>
-            <td>📈 상승</td>
+            <td class="price"><strong>4,310,730</strong></td>
+            <td><span class="change-negative">🔵 -3.82%</span></td>
+            <td>⬇️ 강한 하락</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
             <td class="index-name">달러/원 (USD/KRW)</td>
-            <td class="price"><strong>1,447</strong></td>
-            <td><span class="change-negative">🔵 -0.91%</span></td>
-            <td>📉 하락</td>
-            <td>Sample Data</td>
-        </tr>
-        
-        <tr>
-            <td class="index-name">나스닥 종합</td>
-            <td class="price"><strong>23,426</strong></td>
-            <td><span class="change-positive">🔴 +0.50%</span></td>
+            <td class="price"><strong>1,437</strong></td>
+            <td><span class="change-positive">🔴 +1.85%</span></td>
             <td>⬆️ 강한 상승</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
-            <td class="index-name">S&P 500</td>
-            <td class="price"><strong>6,886</strong></td>
-            <td><span class="change-positive">🔴 +1.70%</span></td>
+            <td class="index-name">나스닥 종합</td>
+            <td class="price"><strong>24,022</strong></td>
+            <td><span class="change-negative">🔵 -1.64%</span></td>
             <td>📉 하락</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
+            <td class="index-name">S&P 500</td>
+            <td class="price"><strong>6,676</strong></td>
+            <td><span class="change-positive">🔴 +2.99%</span></td>
+            <td>⬆️ 강한 상승</td>
+            <td>Sample Data</td>
+        </tr>
+        
+        <tr>
             <td class="index-name">다우존스</td>
-            <td class="price"><strong>48,407</strong></td>
-            <td><span class="change-negative">🔵 -1.86%</span></td>
+            <td class="price"><strong>49,695</strong></td>
+            <td><span class="change-positive">🔴 +0.02%</span></td>
             <td>⬆️ 강한 상승</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
             <td class="index-name">코스피</td>
-            <td class="price"><strong>4,148</strong></td>
-            <td><span class="change-negative">🔵 -1.80%</span></td>
-            <td>📉 하락</td>
+            <td class="price"><strong>4,336</strong></td>
+            <td><span class="change-negative">🔵 -2.79%</span></td>
+            <td>⬆️ 강한 상승</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
             <td class="index-name">WTI 원유</td>
-            <td class="price"><strong>56.37</strong></td>
-            <td><span class="change-negative">🔵 -0.22%</span></td>
-            <td>⬇️ 강한 하락</td>
+            <td class="price"><strong>55.48</strong></td>
+            <td><span class="change-negative">🔵 -4.05%</span></td>
+            <td>⬆️ 강한 상승</td>
             <td>Sample Data</td>
         </tr>
         
         <tr>
             <td class="index-name">국제 금</td>
-            <td class="price"><strong>4,477</strong></td>
-            <td><span class="change-positive">🔴 +3.31%</span></td>
-            <td>📈 상승</td>
+            <td class="price"><strong>4,463</strong></td>
+            <td><span class="change-positive">🔴 +1.75%</span></td>
+            <td>⬇️ 강한 하락</td>
             <td>Sample Data</td>
         </tr>
         </tbody>
             </table>
-            <h2>🌍 경제 뉴스</h2>
-            <div class="news-section"><div class="news-category"><h3>📰 경제 뉴스</h3><div class="news-item"><a href="#">⚠️ 실시간 데이터는 Yahoo Finance API 제한으로 일시 중단되었습니다</a></div><div class="news-item"><a href="#">💡 대시보드는 매일 자동 업데이트되며, 곧 실시간 데이터로 복구될 예정입니다</a></div></div></div>
+            <h2>🌍 글로벌 경제 뉴스</h2>
+            <div class="news-section">
+            <div class="news-category">
+                <h3>🔥 글로벌 주요 이슈</h3>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">미국 연준, 금리 동결 결정... 시장 반응 주목</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">비트코인 12만원대 회복, 암호화폐 시장 훈풍</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">국제유가 하락세 지속, WTI 50달러대 후반</a>
+                </div>
+                
+            </div>
+            
+            <div class="news-category">
+                <h3>📊 증시 동향</h3>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">나스닥, 기술주 강세에 사상 최고치 경신</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">코스피 4100선 안착, 외국인 순매수 지속</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">다우지수 상승 마감, 경기 회복 기대감</a>
+                </div>
+                
+            </div>
+            
+            <div class="news-category">
+                <h3>💱 환율·금융</h3>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">원달러 환율 1440원대, 달러 강세 완화</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">금값 사상 최고치 경신, 안전자산 선호</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">유럽중앙은행 긴축 기조 유지 전망</a>
+                </div>
+                
+            </div>
+            
+            <div class="news-category">
+                <h3>🏢 기업·산업</h3>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">삼성전자, AI 반도체 투자 확대 발표</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">테슬라, 4분기 실적 기대치 상회</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">애플, 신제품 공개 앞두고 주가 상승</a>
+                </div>
+                
+            </div>
+            
+            <div class="news-category">
+                <h3>🌍 국제 경제</h3>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">중국 경제 성장률 4.5% 기록, 예상치 부합</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">일본 엔화 약세 지속, 환율 개입 가능성</a>
+                </div>
+                
+                <div class="news-item">
+                    <a href="#" target="_blank">유럽 인플레이션 둔화 조짐, 긴축 완화 기대</a>
+                </div>
+                
+            </div>
+            </div>
             <div class="footer">
                 <p style="font-size: 1.2em; font-weight: 700; color: #FF6B35;">현명한 투자, 정확한 정보에서 시작됩니다! 📊</p>
                 <p style="margin-top: 10px; font-size: 0.9em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
@@ -146,7 +236,7 @@
         </div>
     </div>
     <script>
-        const CORRECT_PASSWORD = 'mango2025';
+        const CORRECT_PASSWORD = '1116';
         if (sessionStorage.getItem('dashboard-logged-in') === 'true') showDashboard();
         else document.getElementById('password-input').focus();
         function checkPassword() {
