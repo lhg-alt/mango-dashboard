@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import sys
+print("Python version:", sys.version)
+print("스크립트 시작!")
 # -*- coding: utf-8 -*-
 """
 세계 흐름 대시보드 자동 업데이트 스크립트
