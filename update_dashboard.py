@@ -14,7 +14,7 @@ import pytz
 import xml.etree.ElementTree as ET
 
 # FRED API 키 (여기에 입력!)
-FRED_API_KEY = "YOUR_FRED_API_KEY_HERE"  # https://fred.stlouisfed.org/docs/api/api_key.html
+FRED_API_KEY = "bac88cc0d3efe44fd228c71ab9984bdc"  # https://fred.stlouisfed.org/docs/api/api_key.html
 
 def get_market_data():
     """CoinGecko + FRED API로 실시간 데이터 수집"""
