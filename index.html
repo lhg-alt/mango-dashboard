@@ -33,6 +33,102 @@
             color: var(--dark);
         }
 
+        /* 비밀번호 입력 화면 */
+        #password-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 9999;
+        }
+
+        .password-box {
+            background: white;
+            padding: 60px 50px;
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .password-box h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .password-box p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 18px 24px;
+            font-size: 1.1em;
+            border: 3px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+        }
+
+        .password-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.1em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .password-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .error-message {
+            color: var(--danger);
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .lock-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        /* 대시보드 화면 */
+        #dashboard {
+            display: none;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -283,6 +379,10 @@
         }
 
         @media (max-width: 768px) {
+            .password-box {
+                padding: 40px 30px;
+            }
+
             .container {
                 padding: 25px;
                 border-radius: 16px;
@@ -311,34 +411,52 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📊 윌리엄의 Macro Insight</h1>
-            <div class="update-time">기준 시각: 2025-12-27 19:34</div>
-        </header>
-
-        <div class="greeting">
-            <h3>와썹 망고! 😍</h3>
-            <p>오늘도 윌리엄이 <strong>실시간 데이터</strong>와 <strong>추세 그래프</strong>를 싹 정리했어! 📈<br>
-            <strong>뉴스 브리핑</strong>까지 한눈에 확인하고 시장 흐름을 잡아봐! 🔥</p>
+    <!-- 비밀번호 입력 화면 -->
+    <div id="password-screen">
+        <div class="password-box">
+            <div class="lock-icon">🔒</div>
+            <h2>망고 대시보드</h2>
+            <p>비밀번호를 입력하세요</p>
+            <input type="password" 
+                   id="password-input" 
+                   class="password-input" 
+                   placeholder="비밀번호" 
+                   onkeypress="if(event.key==='Enter') checkPassword()">
+            <button class="password-btn" onclick="checkPassword()">🔓 입장하기</button>
+            <p class="error-message" id="error-message">❌ 비밀번호가 틀렸습니다</p>
         </div>
+    </div>
 
-        <h2>1. 📊 핵심 지표 라이브 (Live Ticker)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>지표 (Index)</th>
-                    <th>가격 (Price)</th>
-                    <th>변동 (Change)</th>
-                    <th>출처 (Source)</th>
-                    <th>추세 (Trend 30D)</th>
-                </tr>
-            </thead>
-            <tbody>
-                
+    <!-- 대시보드 화면 -->
+    <div id="dashboard">
+        <div class="container">
+            <header>
+                <h1>📊 윌리엄의 Macro Insight</h1>
+                <div class="update-time">기준 시각: 2025-12-28 10:25</div>
+            </header>
+
+            <div class="greeting">
+                <h3>와썹 망고! 😍</h3>
+                <p>오늘도 윌리엄이 <strong>실시간 데이터</strong>와 <strong>추세 그래프</strong>를 싹 정리했어! 📈<br>
+                <strong>뉴스 브리핑</strong>까지 한눈에 확인하고 시장 흐름을 잡아봐! 🔥</p>
+            </div>
+
+            <h2>1. 📊 핵심 지표 라이브 (Live Ticker)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>지표 (Index)</th>
+                        <th>가격 (Price)</th>
+                        <th>변동 (Change)</th>
+                        <th>출처 (Source)</th>
+                        <th>추세 (Trend 30D)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
         <tr>
             <td class="index-name">비트코인 (BTC/KRW)</td>
-            <td class="price"><strong>126,193,488</strong></td>
+            <td class="price"><strong>126,579,824</strong></td>
             <td><span class="change-neutral">⚪️ 0.00%</span></td>
             <td>Yahoo Finance</td>
             <td></td>
@@ -346,7 +464,7 @@
         
         <tr>
             <td class="index-name">이더리움 (ETH/KRW)</td>
-            <td class="price"><strong>4,225,168</strong></td>
+            <td class="price"><strong>4,244,122</strong></td>
             <td><span class="change-neutral">⚪️ 0.00%</span></td>
             <td>Yahoo Finance</td>
             <td></td>
@@ -472,33 +590,33 @@
             <td></td>
         </tr>
         
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <h2>🌍 경제뉴스 브리핑 🌍</h2>
-        <div class="news-section">
-            
+            <h2>🌍 경제뉴스 브리핑 🌍</h2>
+            <div class="news-section">
+                
             <div class="news-category">
                 <h3>🥔 핫이슈</h3>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE5BclZnSFpPSjJwMjg2VXRIeVpwNDNibUVXZ0kydzhISEZWZVY0cU1nSnZkUkpyV2FteXVzWTlINDBYNEhGRWpaSFhod1ktN3FkZnV2bk5lNmRkeE5TVnp3cFJJNkRhX2locV9R?oc=5" target="_blank">도시 농축협, 도농 상생을 위한 무이자자금 4,717억원 지원 - BBS불교방송</a>
+                    <a href="https://news.google.com/rss/articles/CBMiSkFVX3lxTE9LTFRKSmNrcTRRSFBmLXlUNnA4OExNcUM0bjNRVFp0Sk5NQUVQZW5na2NaZkNKQ3owTDNyN1A1MkNoYjEzRlFUa1RR?oc=5" target="_blank">경제 - 동아일보</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBKUXdoMjNkb1ZRZWxWMkJvQVhJZFZoVFNwRTRodXJiaW02a3ByMTd6WUl3c2xUanEtU0FIX0pyaG9hWl9XbUhac2dGd1hHTHp0SUFqU2I1OV8ybHN2RkE?oc=5" target="_blank">전체 - 시사저널</a>
+                    <a href="https://news.google.com/rss/articles/CBMibkFVX3lxTE1tSGdsTDhtYWMyOWVUTjVtXzNPM0g1N2RLSy1iVDJJb1hZWTBsLTJodld2dmJFWjRxXzdTMTRlZEJ3TnJlR2pKRXpsYTVNN0h1Nm55NDg3RjktUXh0ano3bnFyNlhRYzRyYzdLV0RR?oc=5" target="_blank">왜 호남만 역성장했나? 3분기 지역경제 분석해보니… [아카이브] - 더스쿠프</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMib0FVX3lxTE5UZWVyRk5mTU82S09uQVJpYmlzZFBfbFhFbGwtOWJWT1lWcV9KbjNXa3pBaXJBa1BsWk5ramVTeE9ZLS1xbmEwVnM1a0VVMmsxZTlVN2d2WEo3WGVSdEtDbnZYeDBuUllwWnY3QUtNOA?oc=5" target="_blank">[12월 넷째 주 세계경제동향 브리핑] 달러 내리고 금 치솟았다…연말 앞둔 글로벌 자산시장 변화 - 기호일보</a>
+                    <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTFBFeG93UlFXMHNnWXVIQjV6Z3REMU5vUG1Mc3prdE1uaVYzWlJwRTJtSGl4elFFcnNVcURKOXU1d25yZmp4TVZqNW80blF2dzd4WC1paXQteVNmdw?oc=5" target="_blank">충북도 이복원 경제부지사, 충북 경제 지형도 새로 그리다 - 브릿지경제</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE4wWFhLbzhiYTgzbDNYZmlPWHFwSzkwT0dzTm1oTV81anFvai1mRmxtVTlLcnZZLTg5S2xNOXUwOU8zWXVsR2RIWkNwaU5pbmdWcm9WUmJxSll0ejBzVDlaNm5QdlBzaUlubjFGaw?oc=5" target="_blank">신성영 인천시의원, 페이스북 통해 제9대 인천경제자유구역청장 도전 밝혀 - 영종뉴스</a>
+                    <a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE41NlVNRndKZ2E5QzdfMm1Ha0d3MHVmRUkzeUlUdkU3VWpzZnR6ZXlzLXdKUExQNmJQMEhtdi1NZlBlZXJuRnE0VE5kLWtwS2VMSWdmczBYbmVTT3A2RDFZMXpGTHhWa3VnandnbFFuczc0OFBW?oc=5" target="_blank">中 경제 브리핑...中 11월 상품∙서비스 무역 규모 910조원 넘어 外 -Xinhua - 신화망</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE55SENXYlFLeWJMUU1FSVRJdFZfdlQ2QUw3dzBrZUNaSDRQUWRlbTZscmZpbllOSFNNVlVyLS1YMklMX29hdmctYS1pRW9JUjNUR0lQZnFtcHNoVzDSAWBBVV95cUxNQzNGYkhkYjdKRG8xSjhMRDhpVFJXWW13bXE3NGJTczd3TlJiRy1YUHlOUms3R2hISXdjemI3UzRRa2R3NERiOUJIOWRpX2JSQ19OeExMWEZFb1lwajNTZHk?oc=5" target="_blank">[다음주 경제] 높은 환율에 12월 물가 얼마나 올랐나 - 연합뉴스</a>
+                    <a href="https://news.google.com/rss/articles/CBMiigFBVV95cUxPTDhtT3lxRWw5dFNHU09LWWt3N3VHdmJuUDhOM0ExUWFCSVhIdmlpWkRFTGl2QzRlaFk3ME5IMjcydHV5U2pNeUsxZldVb2hiQWs3NVpQUzNwQnI0enpOR3RQOWpxSTVfMGJESFYyMXZGbURDbmt1ay1jWTdqOF82UkhSb3FyWHNrUHfSAZ4BQVVfeXFMTWFtSklSak9CMVlMYUo5Yms0Mm9OcjNHODgxMktsbmpySHZmb1dEa3RFbDFzSFJNVFpwX20xcHpGRDdnQmVUcXFZS25TUGpzWEdFMlNsS2h5NFotTUFyT1ZCQVhlQ2dLOEdPYW1vRXJaanBXNi1jNEttTlBxbFdwWjh3ZXZOQkliYTZCeFIxeDgwRGM4S2xlaVljNW5zZ1E?oc=5" target="_blank">3년 연속 2% 이하 저성장 늪 빠진 한국 경제...반등할 수 있을까 - 조선일보</a>
                 </div>
                 
             </div>
@@ -507,23 +625,23 @@
                 <h3>📊 증시 UP&DOWN</h3>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1EX3h3YXFpUkdqaGNXNnFOZmRvR29uVzNsYnJHUU1PQzhIUWc4ZWFaQU1sakJlQVY0empSX3VsMFd5Z0dLZUo2TnZGanVXVVNfNS1nMkM1OWVXeDJnRHlLcGpjSV9uS1V2TGNNOA?oc=5" target="_blank">쿠팡, 미국 주식 반등과 주주 집단소송 막기위해 한국 침해사고 절차 무시했나 - 데일리시큐</a>
+                    <a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxONnhPb1lMa2dVUXZCX21qLUFqVUtEM3Z4ZV9nVDBtcXB6YnRZQUFYelJKWkViVlc2R2ZOVTNCS0dHWjllYnByd3VBeHlnU3lYcXBUXzBtbG51emVLOUpSN1R1UHhrYWJONmllT2NYRUVDbHN0S0VRMElGMzVKTXFBa0xPRFVCS1k5?oc=5" target="_blank">은, 금·주식·비트코인 제치고 2025년 최고 수익 자산 등극 - 글로벌이코노믹</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxQTGVqbVJ5dE1qVEpCc3MtOFRrOEllMWdxTFJ1WEtOcFlOUFZHQzgwZXhLYlpJNk9rNjVfQS04bmRUSHlWVF9ZaEZMYzVIM3hPY0lDMnRiN2JUcHVvV0NBclZZdE1xVGRRS2FENHE0WFVZNDU2REVPVUtiekxRdjVudVRQM25yQUdDRGFxcFdLREXSAZABQVVfeXFMUExlam1SeXRNalRKQnNzLThUazhJZTFncUxSdVhLTnBZTlBWR0M4MGV4S2JaSTZPazY1X0EtOG5kVEh5VlRfWWhGTGM1SDN4T2NJQzJ0YjdiVHB1b1dDQXJWWXRNcVRkUUthRDRxNFhVWTQ1NkRFT1VLYnpMUXY1bnVUUDNuckFHQ0RhcXBXS0RF?oc=5" target="_blank">상장 기업은 Toho Co. (TSE:9602) 주식의 33%를 소유하고 있지만 개인 투자자가 회사의 46%를 지배하고 있습니다. - simplywall.st</a>
+                    <a href="https://news.google.com/rss/articles/CBMiWEFVX3lxTE1JM1hjOWMyd1VfRjRjeWU0VDdDa3FwZDZrQm0wUGZMY19XUFA4aDdzQ2hxQ2ZUc2dDYUsyZGpzZ2oxenFSSm5pWGdqREs3QVVoc1lFUU1JSWbSAVRBVV95cUxPYnlORkdlVVhVZXNNOV80bW83SlJGczZFZHQ4SHVWYjRrLTlOZ2lZd1JKaEszWWN6LWVxRDBkY3haSUpkQ25kejVwMU5JWmp3X05KR0k?oc=5" target="_blank">해외주식 이벤트는 종료, 환율 방어는 연금 몫? - segye.com</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9pWDUyaWhnU2hSX1k5cXNOUTQzXzVYSElhVmJvT1FLUVlyYzQyajJzVGJzSnZyd1JYby1xTDFEeDdwcmsxcnlfdkxtQlY3bUlFbnRBY05Walh5NHlBVmNGTlRzbGlsYUFyTmc?oc=5" target="_blank">세제혜택만 받고 해외주식 복귀하면? RIA 실효성 논란 - 한국일보</a>
+                    <a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTFBXYUZGOXlWNnprN0tGcDZLZlRDNXdwTVc3U3pTMXYwZkJZNmw4c1BETE9lZDZhMmpaSzVrWUlFa0F3Mjdhbjh4NWlsdVd0LVU4aGxkcQ?oc=5" target="_blank">당국 압박에 해외주식 이벤트 종료…서학개미 뿔났다 - 이투데이</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBjMEgwREdhTWhVZG96SlU1T3pVbmdTTHQwTVJIOV9wdWFmcXJKV215eWhKaHY1eGhQNUVMbHM3aFVnbmpJQ1FiY1VrR2RHNUVkVlk0akxFbVBRVS04X2c?oc=5" target="_blank">비상장 주식의 NYSE ‘포지 글로벌’…스페이스X도 살 수 있어요 [마켓 디코드] - smarttoday.co.kr</a>
+                    <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE9KdEdZQVBzSGJYTTh4enZjemlfeVQydEdndms5NWRTQ0xZcTUySm54LWtFaXZSdGlRQ2VBNWI4cW1VZGlCWURlLTZiM2tMSFJTOUlpM2dEUjAtZ9IBVEFVX3lxTE93LXhibEpjMjhHem5ieVNibFBTQ2xSZG1Iejk2SU9MUDhQQWRFRElRc21TYUFHUE9VY3JRMFk2el9wTkYtSjNqckQ1cHNTRjNIUlp4NQ?oc=5" target="_blank">"물타기로 3300만원 날릴 판"…50대 개미 울린 '눈물의 종목' [윤현주의 主食이 주식] - 한국경제</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBlSmpTbnRyRk92ZVZLQkF0NkJyUG1jOC11SUlIZ2o0N3dMd1JVQzRyZTRQOE1rbFJ5WVM0T08xSFU5cFhMVnM4dzROaElBbWVvSE1wSWhB?oc=5" target="_blank">“4일간 美주식 4000억 팔았다” 서학개미 ‘양도세 당근책’에 국장 돌아오나 [머니뭐니] - 헤럴드경제</a>
+                    <a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxOVUdjTzJqYTJlN0ZfdFI0STFhcE5YcFJBMk0yY3BCVFR1WHBwX1dSbVBDRU11eS1Ycm5uRE5CZ3dKSi1aWmFJQ2dNOUJLbVJIRnhxSUJPWHdYMWxQcGluVFlVNElDMXJ2SUZQYjUwWl9lY3BEN2Jza0RNWUFDZXBrTEVMUGFiSmJJ?oc=5" target="_blank">2026 글로벌 증시는? '관세 공포' 뚫고 7000선 넘보는 美 증시... '에이전트 AI'와 'K-밸류업' - 글로벌이코노믹</a>
                 </div>
                 
             </div>
@@ -532,34 +650,86 @@
                 <h3>🏘️ 부동산</h3>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiR0FVX3lxTE9tOFZEenl2VjZsSTVjSk1qREJDbXNOaUtfOFJVVTBsY2tkOWxQQ2YwWkNpRXp6eThHVHcyVldzNjZKWDNjWXdJ?oc=5" target="_blank">부동산 뉴스 - 다방</a>
+                    <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE5QYXl0NkJDS01DQzFoQ0h3SmxtLWNleUg3am1aaVZDRXZoR05xeFgwUzlXMFFGLWRvQW9BTW5Qd1gxOWhubXFEbV9HbXpULUNuQWk1N1FWOEV3V1FURU03cmxiWjI?oc=5" target="_blank">‘3연속 대책’ 무색한 부동산 불패…해 넘겨도 요원한 금리 인하 - 매일일보</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE54SWJkNzZrZk1xUmhvOF9SemJYUzJRNVlEN01oUzhzb2dVeDk4NE5YelNCRWNudTBmcVpENUtSbUh4RHdKR282UVA2bjBkZnpRR3ZmSDY3T1hKXzJza3FMc2xBbm9UX1dMRXc?oc=5" target="_blank">올해 마지막 주 전국 10곳서 6692가구 분양 돌입[부동산AtoZ] - 아시아경제</a>
+                    <a href="https://news.google.com/rss/articles/CBMidkFVX3lxTE82MmxLaUJvOXhmVmNkSjJISm5McmRkZ0RQeDJxdkx1TWhsVUl1aDJENDlEZTZWdXJzT2xJYXkyalVjU2JUbTkzUEJXYmtSdjFuRy1Bd2FSWkVDS2NXMjdXMl9qbXk3Q21jX0ZUU0RXNlB4eU9BelHSAWZBVV95cUxPemF5TXJaX0R4WFEwXzhVNTFYenJEZUNudlVuT29FeklRTlRGSVkyb2lKZnBOMmdoUXBxQXJxWnktRFN0Zk9VSHlLcTB4N1h0Nk4ydEE3ODAtWHUxeWR0dU85bW11aUE?oc=5" target="_blank">반도체·풍선효과·철도… 내년 부동산시장 달굴 3대 키워드 - 동아일보</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBvSXhCTXBoeDl3WE9PUHNhYU5qWnJ2ZFZuXzNUVmw5N1p5dXUzbFdTazEzWkJ1bExQVVVnQW9TamJrcDRwV29CN3FtQXZuc0VLaXhaMDVR?oc=5" target="_blank">1년만에 10억 오른 송파, 6·27 후 대출만 8200억 몰렸다 [부동산360] - 헤럴드경제</a>
+                    <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE90RXBORHhyeHJMLVpkNmFEQTJ5QWNPQWdQS0RfT1BXVjZrR3hfQmFmVEtkbk5zb1BXY2pseE10UHc1ejBMb0J5R0ZYT3N4alBudFZfcjlSZnBzV0NDaFHSAYMBQVVfeXFMUGZVMEhHTHVKWDAxQW44bl9nem9malNRYW9oTEFFTWN3eHhmWE9sLWhqNWY0d01tZDN1bzlqdlNVcWxwUmM0ZTVKeFZMVEEyRm53b0JQVHdvSXFIQXBReFE3VmNFc1BvV2Y3bjRZdkVxdk05eW1sdnNKQ3k2MExvd0lYSWc?oc=5" target="_blank">[열린라디오YTN] 부동산이 일본에서 만든 말이라고? 그럼 우리말로는? - YTN</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE8xMVNsejlyUnJGd3dGUUxTckc4MFhDS0tQb3JoMDFreGlNUnNaZEFXUHY2MkIxUkhHR1pxbzJzYnZWY1RxdEY4aFhZSmpXdlM3TEtwdnhhYzM0Z9IBXkFVX3lxTE0wRHNCUXZGeVl4bXQxWWZlN0NEcHJfMG9UN1RfdmJQazBDYmRVY0hrQkNqUXJSamc4LVMzYXBYMEs0Rzhody1wNkpLUzdiekNsRVpnSENzc1BFcUoyWlE?oc=5" target="_blank">"7억 더 내라” 강남 집주인도 날벼락..."끝이 아니다" [부동산 산책] - fnnews.com</a>
+                    <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE5WdHhaenpySkt0c1lEaVdWOGk4RnpMQ3dMWE1qSlJySENNTzZFQlBDamI4TjB6ZXRjdFRKZlBnZlBKMGt5T1hCVnBlVm9BZGtZdUJHZGJxSUVoMWM?oc=5" target="_blank">지식산업센터 확산…부동산 규제 여파 ‘촉각’ - KBS 뉴스</a>
                 </div>
                 
                 <div class="news-item">
-                    <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE1RdDBEWWs4NElFb1k4b3ZObVlxbHhyMUJyNEM4SWRiY2V5akRNZG9wdGc1NTJ3X2hXeVdENVFhNllrc09pVkJSOURFRVRiUW9RTWJDb3dRM2s2WEU?oc=5" target="_blank">[부동산캘린더] 올해 마지막 분양…내주 전국 5천576가구 청약 - 연합뉴스</a>
+                    <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE5LQzB1VkZ5Q25OWkZKNUNjeVV5VElYYkRqWmY3MndzZUhVR0RGbVhsM2FEbC1TejR3QmxYTVJhWjkxeDFDeGprSHhTQm5WMU5hNjhxLXJLTEVVTjlIckpvdTJBMFlQbFN6MXBB?oc=5" target="_blank">생존 위해 발버둥친 건설사들…재무 고삐·현장 안전 ‘고군분투’ [2025 결산/부동산] - 시사오늘</a>
                 </div>
                 
             </div>
             
-        </div>
+            </div>
 
-        <div class="footer">
-            <p class="footer-highlight">오늘도 성투해 망고! 질문 있으면 언제든 환영이야! 💛</p>
-            <p style="margin-top: 15px; font-size: 0.95em;">Data Powered by Yahoo Finance & Google News</p>
-            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
+            <div class="footer">
+                <p class="footer-highlight">오늘도 성투해 망고! 질문 있으면 언제든 환영이야! 💛</p>
+                <p style="margin-top: 15px; font-size: 0.95em;">Data Powered by Yahoo Finance & Google News</p>
+                <p style="margin-top: 10px; font-size: 0.85em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
+            </div>
         </div>
     </div>
+
+    <script>
+        // 비밀번호 설정 (Python 스크립트와 동일하게)
+        const CORRECT_PASSWORD = '1116';
+        
+        // 세션 스토리지에서 로그인 상태 확인
+        if (sessionStorage.getItem('mango-logged-in') === 'true') {
+            showDashboard();
+        } else {
+            // 페이지 로드 시 비밀번호 입력창에 포커스
+            document.getElementById('password-input').focus();
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const errorMsg = document.getElementById('error-message');
+            
+            if (input.value === CORRECT_PASSWORD) {
+                // 비밀번호 맞음
+                sessionStorage.setItem('mango-logged-in', 'true');
+                showDashboard();
+            } else {
+                // 비밀번호 틀림
+                errorMsg.style.display = 'block';
+                input.value = '';
+                input.focus();
+                
+                // 입력창 흔들기 효과
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    input.style.animation = '';
+                }, 500);
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('password-screen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        // 흔들기 애니메이션
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
