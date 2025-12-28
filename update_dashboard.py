@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-망고 대시보드 자동 업데이트 스크립트
-매일 자동으로 최신 금융 데이터와 뉴스를 수집하여 HTML 생성
+세계 흐름 대시보드 자동 업데이트 스크립트
+매일 자동으로 최신 금융 데이터와 글로벌 뉴스를 수집하여 HTML 생성
 """
 
 import json
@@ -11,7 +11,7 @@ from datetime import datetime
 import pytz
 
 def get_market_data():
-    """Yahoo Finance API를 통해 시장 데이터 수집"""
+    """Yahoo Finance API를 통해 시장 데이터 수집 (30일 추세 포함)"""
     indicators = [
         {"name": "비트코인 (BTC/KRW)", "symbol": "BTC-KRW"},
         {"name": "이더리움 (ETH/KRW)", "symbol": "ETH-KRW"},
@@ -36,10 +36,11 @@ def get_market_data():
     
     for indicator in indicators:
         try:
+            # 30일 데이터 가져오기
             url = f"https://query1.finance.yahoo.com/v8/finance/chart/{indicator['symbol']}"
             params = {
                 "interval": "1d",
-                "range": "2d"
+                "range": "1mo"  # 30일 데이터
             }
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -52,6 +53,7 @@ def get_market_data():
                 result = data['chart']['result'][0]
                 meta = result.get('meta', {})
                 
+                # 현재가와 전일 대비 변동률
                 current_price = meta.get('regularMarketPrice', 0)
                 previous_close = meta.get('previousClose', 0)
                 
@@ -60,10 +62,30 @@ def get_market_data():
                 else:
                     change_percent = 0
                 
+                # 30일 추세 계산
+                timestamps = result.get('timestamp', [])
+                quotes = result.get('indicators', {}).get('quote', [{}])[0]
+                closes = quotes.get('close', [])
+                
+                trend_30d = ""
+                if len(closes) >= 2 and closes[0] is not None and closes[-1] is not None:
+                    price_30d_ago = closes[0]
+                    if price_30d_ago > 0:
+                        trend_change = ((current_price - price_30d_ago) / price_30d_ago) * 100
+                        if trend_change > 5:
+                            trend_30d = "⬆️ 강한 상승"
+                        elif trend_change > 0:
+                            trend_30d = "📈 상승"
+                        elif trend_change > -5:
+                            trend_30d = "📉 하락"
+                        else:
+                            trend_30d = "⬇️ 강한 하락"
+                
                 market_data.append({
                     "name": indicator['name'],
                     "price": current_price,
                     "change": change_percent,
+                    "trend_30d": trend_30d,
                     "source": "Yahoo Finance"
                 })
         except Exception as e:
@@ -72,6 +94,7 @@ def get_market_data():
                 "name": indicator['name'],
                 "price": 0,
                 "change": 0,
+                "trend_30d": "",
                 "source": "Yahoo Finance"
             })
     
@@ -79,52 +102,125 @@ def get_market_data():
 
 
 def get_news():
-    """Google News RSS에서 경제 뉴스 수집"""
+    """Google News RSS에서 글로벌 경제 뉴스 수집"""
     news_categories = {
-        "📆 일정": [],
-        "🥔 핫이슈": [],
-        "📊 증시 UP&DOWN": [],
-        "✨ 금융시장 동향": [],
-        "🍯 투자·재테크": [],
-        "👂 산업 뉴스": [],
-        "💼 기업 소식": [],
-        "⚙️ 테크(Tech)": [],
-        "🗞️ 경제 정책": [],
-        "🚩 경제 지표": [],
-        "🏘️ 부동산": []
+        "📆 주요 일정": [],
+        "🔥 글로벌 핫이슈": [],
+        "📊 세계 증시": [],
+        "💱 금융시장 동향": [],
+        "💼 투자·재테크": [],
+        "🏭 산업 뉴스": [],
+        "🏢 기업 소식": [],
+        "🤖 테크·AI": [],
+        "🏛️ 경제 정책": [],
+        "📈 경제 지표": [],
+        "🏘️ 부동산": [],
+        "🌏 아시아": [],
+        "🇺🇸 미국": [],
+        "🇪🇺 유럽": []
     }
     
-    # Google News RSS 피드
-    keywords = ["경제", "주식", "증시", "부동산", "투자"]
+    # Google News RSS 피드 - 글로벌 키워드 추가
+    search_keywords = {
+        "글로벌 경제": ["경제", "economy", "global economy"],
+        "주식 시장": ["주식", "증시", "stock market", "nasdaq", "s&p 500"],
+        "금융": ["금융", "finance", "금리", "interest rate"],
+        "부동산": ["부동산", "아파트", "real estate"],
+        "기술": ["테크", "AI", "인공지능", "tech", "technology"],
+        "정책": ["정책", "금리", "중앙은행", "fed", "ecb"],
+        "기업": ["기업", "CEO", "M&A", "earnings"],
+        "투자": ["투자", "펀드", "investment", "etf"],
+        "지역": ["미국", "중국", "일본", "유럽", "아시아"]
+    }
     
     try:
         import feedparser
         
         all_news = []
-        for keyword in keywords:
+        
+        # 한국 뉴스
+        for keyword in ["경제", "주식", "증시", "부동산", "금융", "투자", "기업", "정책"]:
             feed_url = f"https://news.google.com/rss/search?q={keyword}+when:1d&hl=ko&gl=KR&ceid=KR:ko"
             feed = feedparser.parse(feed_url)
             
-            for entry in feed.entries[:5]:  # 각 키워드당 5개
+            for entry in feed.entries[:3]:  # 각 키워드당 3개
                 all_news.append({
                     "title": entry.title,
                     "link": entry.link,
-                    "source": entry.source.title if hasattr(entry, 'source') else "Google News"
+                    "source": entry.source.title if hasattr(entry, 'source') else "뉴스",
+                    "region": "KR"
                 })
         
-        # 뉴스를 적절한 카테고리에 분류 (간단한 키워드 매칭)
+        # 글로벌 뉴스 (영어)
+        global_keywords = ["global economy", "stock market", "fed", "bitcoin", "tech", "ai"]
+        for keyword in global_keywords:
+            feed_url = f"https://news.google.com/rss/search?q={keyword}+when:1d&hl=en&gl=US&ceid=US:en"
+            feed = feedparser.parse(feed_url)
+            
+            for entry in feed.entries[:2]:  # 각 키워드당 2개
+                all_news.append({
+                    "title": entry.title,
+                    "link": entry.link,
+                    "source": entry.source.title if hasattr(entry, 'source') else "News",
+                    "region": "GLOBAL"
+                })
+        
+        # 뉴스를 카테고리별로 분류 (키워드 매칭)
         for news in all_news:
-            title = news['title']
-            if any(word in title for word in ["부동산", "아파트", "집값"]):
+            title = news['title'].lower()
+            categorized = False
+            
+            # 부동산
+            if any(word in title for word in ["부동산", "아파트", "집값", "real estate", "housing"]):
                 news_categories["🏘️ 부동산"].append(news)
-            elif any(word in title for word in ["주식", "증시", "코스피", "나스닥"]):
-                news_categories["📊 증시 UP&DOWN"].append(news)
-            elif any(word in title for word in ["정책", "정부", "금리"]):
-                news_categories["🗞️ 경제 정책"].append(news)
-            elif any(word in title for word in ["기업", "CEO", "회사"]):
-                news_categories["💼 기업 소식"].append(news)
-            else:
-                news_categories["🥔 핫이슈"].append(news)
+                categorized = True
+            
+            # 증시
+            elif any(word in title for word in ["주식", "증시", "코스피", "나스닥", "stock", "nasdaq", "s&p"]):
+                news_categories["📊 세계 증시"].append(news)
+                categorized = True
+            
+            # 정책
+            elif any(word in title for word in ["정책", "정부", "금리", "중앙은행", "fed", "policy", "rate"]):
+                news_categories["🏛️ 경제 정책"].append(news)
+                categorized = True
+            
+            # 기업
+            elif any(word in title for word in ["기업", "ceo", "회사", "earnings", "profit", "삼성", "애플", "테슬라"]):
+                news_categories["🏢 기업 소식"].append(news)
+                categorized = True
+            
+            # 테크/AI
+            elif any(word in title for word in ["ai", "인공지능", "테크", "tech", "반도체", "chip", "nvidia"]):
+                news_categories["🤖 테크·AI"].append(news)
+                categorized = True
+            
+            # 금융시장
+            elif any(word in title for word in ["금융", "은행", "환율", "달러", "finance", "bank", "currency"]):
+                news_categories["💱 금융시장 동향"].append(news)
+                categorized = True
+            
+            # 투자
+            elif any(word in title for word in ["투자", "펀드", "etf", "investment", "비트코인", "bitcoin"]):
+                news_categories["💼 투자·재테크"].append(news)
+                categorized = True
+            
+            # 지역별
+            elif any(word in title for word in ["미국", "usa", "america", "트럼프", "trump"]):
+                news_categories["🇺🇸 미국"].append(news)
+                categorized = True
+            
+            elif any(word in title for word in ["유럽", "europe", "eu", "ecb"]):
+                news_categories["🇪🇺 유럽"].append(news)
+                categorized = True
+            
+            elif any(word in title for word in ["중국", "일본", "아시아", "china", "japan", "asia"]):
+                news_categories["🌏 아시아"].append(news)
+                categorized = True
+            
+            # 분류 안된 건 글로벌 핫이슈로
+            if not categorized:
+                news_categories["🔥 글로벌 핫이슈"].append(news)
         
     except Exception as e:
         print(f"Error fetching news: {e}")
@@ -156,7 +252,7 @@ def generate_html(market_data, news_data):
     """HTML 파일 생성"""
     
     # 비밀번호 설정 (원하는 비밀번호로 변경하세요!)
-    PASSWORD = "1116"
+    PASSWORD = "mango2025"  # ← 여기서 비밀번호 변경!
     
     # 현재 시각 (한국 시간)
     kst = pytz.timezone('Asia/Seoul')
@@ -171,8 +267,8 @@ def generate_html(market_data, news_data):
             <td class="index-name">{data['name']}</td>
             <td class="price"><strong>{format_price(data['price'])}</strong></td>
             <td>{format_change(data['change'])}</td>
+            <td>{data.get('trend_30d', '')}</td>
             <td>{data['source']}</td>
-            <td></td>
         </tr>
         """
     
@@ -208,7 +304,7 @@ def generate_html(market_data, news_data):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📊 윌리엄의 Macro Insight</title>
+    <title>🌍 세계 흐름 대시보드</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
@@ -620,7 +716,7 @@ def generate_html(market_data, news_data):
     <div id="password-screen">
         <div class="password-box">
             <div class="lock-icon">🔒</div>
-            <h2>망고 대시보드</h2>
+            <h2>세계 흐름 대시보드</h2>
             <p>비밀번호를 입력하세요</p>
             <input type="password" 
                    id="password-input" 
@@ -636,14 +732,14 @@ def generate_html(market_data, news_data):
     <div id="dashboard">
         <div class="container">
             <header>
-                <h1>📊 윌리엄의 Macro Insight</h1>
+                <h1>🌍 세계 흐름 대시보드</h1>
                 <div class="update-time">기준 시각: {update_time}</div>
             </header>
 
             <div class="greeting">
-                <h3>와썹 망고! 😍</h3>
-                <p>오늘도 윌리엄이 <strong>실시간 데이터</strong>와 <strong>추세 그래프</strong>를 싹 정리했어! 📈<br>
-                <strong>뉴스 브리핑</strong>까지 한눈에 확인하고 시장 흐름을 잡아봐! 🔥</p>
+                <h3>세계 경제, 한눈에! 🌏</h3>
+                <p>최신 <strong>글로벌 금융 데이터</strong>와 <strong>세계 경제 뉴스</strong>를 실시간으로 제공합니다! 📈<br>
+                <strong>한국부터 미국, 유럽, 아시아까지</strong> 전 세계 경제 흐름을 놓치지 마세요! 🔥</p>
             </div>
 
             <h2>1. 📊 핵심 지표 라이브 (Live Ticker)</h2>
@@ -653,8 +749,8 @@ def generate_html(market_data, news_data):
                         <th>지표 (Index)</th>
                         <th>가격 (Price)</th>
                         <th>변동 (Change)</th>
-                        <th>출처 (Source)</th>
                         <th>추세 (Trend 30D)</th>
+                        <th>출처 (Source)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -662,13 +758,13 @@ def generate_html(market_data, news_data):
                 </tbody>
             </table>
 
-            <h2>🌍 경제뉴스 브리핑 🌍</h2>
+            <h2>🌍 글로벌 경제 뉴스 🌍</h2>
             <div class="news-section">
                 {news_sections}
             </div>
 
             <div class="footer">
-                <p class="footer-highlight">오늘도 성투해 망고! 질문 있으면 언제든 환영이야! 💛</p>
+                <p class="footer-highlight">현명한 투자, 정확한 정보에서 시작됩니다! 📊</p>
                 <p style="margin-top: 15px; font-size: 0.95em;">Data Powered by Yahoo Finance & Google News</p>
                 <p style="margin-top: 10px; font-size: 0.85em; color: #999;">자동 업데이트: 매일 오전 9시 (KST)</p>
             </div>
@@ -734,7 +830,7 @@ def generate_html(market_data, news_data):
 
 def main():
     """메인 실행 함수"""
-    print("🚀 망고 대시보드 업데이트 시작...")
+    print("🚀 세계 흐름 대시보드 업데이트 시작...")
     
     # 데이터 수집
     print("📊 시장 데이터 수집 중...")
